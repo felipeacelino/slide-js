@@ -1,0 +1,24 @@
+{
+  "name": "slide-js",
+  "version": "1.0.0",
+  "description": "Slide do projeto do curso de Javascript ES6",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/felipeacelino/slide-js.git"
+  },
+  "author": "Felipe Acelino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/felipeacelino/slide-js/issues"
+  },
+  "homepage": "https://github.com/felipeacelino/slide-js#readme",
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
+  }
+}
