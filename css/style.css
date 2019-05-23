@@ -1,5 +1,6 @@
 body {
     margin: 0px;
+    background: #3C4147;
 }
 
 ul {
@@ -11,6 +12,40 @@ ul {
 img {
     display: block;
     max-width: 100%;
+}
+
+.slide-container {
+    position: relative;
+}
+
+.arrow-nav {
+    /* position: absolute;
+    top: 50%;
+    left: 0;
+    border: 1px solid #000; */
+}
+
+.arrow-nav button {
+    position: absolute;
+    top: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
+    background: none;
+    border: none;
+    border-top: 1px solid #FFF;
+    border-right: 1px solid #FFF;
+    outline: none;
+    cursor: pointer;
+}
+
+.arrow-nav .prev {
+    left: 20px;
+    transform: rotate(-135deg);
+}
+
+.arrow-nav .next {
+    right: 20px;
+    transform: rotate(45deg);
 }
 
 .slide-wrapper {
