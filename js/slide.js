@@ -6,6 +6,11 @@ export default class Slide {
     this.dist = { finalPosition: 0, startX: 0, movement: 0 };
   }
 
+  // Efeito de transição
+  transition(active) {
+    this.slide.style.transition = active ? 'transform .3s' : '';
+  }
+
   // Move o slide
   moveSlide(distX) {
     this.dist.movePosition = distX;
@@ -30,6 +35,7 @@ export default class Slide {
       moveType = 'touchmove';
     }
     this.wrapper.addEventListener(moveType, this.onMove);
+    this.transition(false);
   }
 
   // Evento de movimento
@@ -44,6 +50,19 @@ export default class Slide {
     const moveType = (event.type === 'mouseup') ? 'mousemove' : 'touchmove';
     this.wrapper.removeEventListener(moveType, this.onMove);
     this.dist.finalPosition = this.dist.movePosition;
+    this.transition(true);
+    this.changeSlideOnEnd();
+  }
+
+  // Muda o slide ao finalizar o movimento do toque/click
+  changeSlideOnEnd() {
+    if (this.dist.movement > 120 && this.index.next !== undefined) {
+      this.activeNextSlide();
+    } else if (this.dist.movement < 120 && this.index.prev !== undefined) {
+      this.activePrevSlide();
+    } else {
+      this.changeSlide(this.index.active);
+    }
   }
 
   // Adiciona os eventos ao slide
@@ -74,7 +93,6 @@ export default class Slide {
         const position = this.slidePosition(element);
         return { position, element };
       });
-    console.log(this.slideArray);
   }
 
   // índices da navegação dos slides
@@ -95,9 +113,24 @@ export default class Slide {
     this.dist.finalPosition = activeSlide.position;
   }
 
+  // Vai para o slide anterior
+  activePrevSlide() {
+    if (this.index.prev !== undefined) {
+      this.changeSlide(this.index.prev);
+    }
+  }
+
+  // Vai para o slide seguinte 
+  activeNextSlide() {
+    if (this.index.next !== undefined) {
+      this.changeSlide(this.index.next);
+    }
+  }
+
   // Método de inicialização do slide
   init() {
     this.bindEvents();
+    this.transition(true);
     this.addSlideEvents();
     this.slidesConfig();
     return this;
