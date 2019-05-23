@@ -1,9 +1,12 @@
+import debounce from './debounce.js';
+
 export default class Slide {
   // Construtor da classe
   constructor(slide, wrapper) {
     this.slide = document.querySelector(slide);
     this.wrapper = document.querySelector(wrapper);
     this.dist = { finalPosition: 0, startX: 0, movement: 0 };
+    this.activeClass = 'active';
   }
 
   // Efeito de transição
@@ -65,20 +68,7 @@ export default class Slide {
     }
   }
 
-  // Adiciona os eventos ao slide
-  addSlideEvents() {
-    this.wrapper.addEventListener('mousedown', this.onStart);
-    this.wrapper.addEventListener('touchstart', this.onStart);
-    this.wrapper.addEventListener('mouseup', this.onEnd);
-    this.wrapper.addEventListener('touchend', this.onEnd);
-  }
-
-  // Realiza os bind`s dos eventos
-  bindEvents() {
-    this.onStart = this.onStart.bind(this);
-    this.onMove = this.onMove.bind(this);
-    this.onEnd = this.onEnd.bind(this);
-  }
+  
 
   // Calcula a posição do slide (Centralizando na tela)
   slidePosition(slide) {
@@ -111,6 +101,13 @@ export default class Slide {
     this.moveSlide(activeSlide.position);
     this.slidesIndexNav(index);
     this.dist.finalPosition = activeSlide.position;
+    this.changeActiveClass();
+  }
+
+  // Adiciona a classe ao slide ativo
+  changeActiveClass() {
+    this.slideArray.forEach(item => item.element.classList.remove(this.activeClass));
+    this.slideArray[this.index.active].element.classList.add(this.activeClass);
   }
 
   // Vai para o slide anterior
@@ -120,11 +117,40 @@ export default class Slide {
     }
   }
 
-  // Vai para o slide seguinte 
+  // Vai para o próximo slide
   activeNextSlide() {
     if (this.index.next !== undefined) {
       this.changeSlide(this.index.next);
     }
+  }
+
+  // Recalcula as posições dos slides ao redimensionar a tela
+  onResize() {
+    setTimeout(() => {
+      this.slidesConfig();
+      this.changeSlide(this.index.active);
+    }, 1000);
+  }
+
+  // Evento de 'Resize' da tela
+  addResizeEvent() {
+    window.addEventListener('resize', this.onResize);
+  }
+
+  // Adiciona os eventos ao slide
+  addSlideEvents() {
+    this.wrapper.addEventListener('mousedown', this.onStart);
+    this.wrapper.addEventListener('touchstart', this.onStart);
+    this.wrapper.addEventListener('mouseup', this.onEnd);
+    this.wrapper.addEventListener('touchend', this.onEnd);
+  }
+
+  // Realiza os bind`s dos eventos
+  bindEvents() {
+    this.onStart = this.onStart.bind(this);
+    this.onMove = this.onMove.bind(this);
+    this.onEnd = this.onEnd.bind(this);
+    this.onResize = debounce(this.onResize.bind(this), 200);
   }
 
   // Método de inicialização do slide
@@ -133,6 +159,7 @@ export default class Slide {
     this.transition(true);
     this.addSlideEvents();
     this.slidesConfig();
+    this.addResizeEvent();
     return this;
   }
 }
